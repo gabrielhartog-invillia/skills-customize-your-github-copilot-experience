@@ -112,6 +112,7 @@ Copilot lê o resultado e decide: prosseguir ou abortar
 2. **Crie o arquivo de configuração** `.json` na mesma pasta:
    ```json
    {
+     "version": 1,
      "hooks": {
        "PreToolUse": [
          {

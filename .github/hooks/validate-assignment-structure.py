@@ -9,10 +9,11 @@ a estrutura esperada do projeto.
 Payload de entrada (stdin): JSON com os dados da ferramenta
 Saída (stdout): JSON indicando se a ação deve prosseguir ou ser bloqueada
 
-Formato de saída esperado pelo Copilot (preToolUse decision control):
+Formato de saída para compatibilidade entre runtimes (VS Code, Copilot CLI e cloud):
 - permissionDecision: "allow", "deny" ou "ask"
 - permissionDecisionReason: string (obrigatória quando "deny")
-- modifiedArgs: objeto opcional para substituir argumentos
+- hookSpecificOutput.permissionDecision: formato esperado pelo VS Code
+- hookSpecificOutput.permissionDecisionReason: motivo no formato esperado pelo VS Code
 """
 
 import json
@@ -24,6 +25,19 @@ ALLOWED_FILENAMES = {"README.md", "starter-code.py", "data.csv"}
 
 # Prefixo que identifica pastas de assignments
 ASSIGNMENTS_PREFIX = "assignments/"
+
+
+def build_decision(decision: str, reason: str = "") -> dict:
+    """Gera saída compatível com VS Code e com runtimes que leem a raiz."""
+    result = {"permissionDecision": decision}
+    hook_specific_output = {"permissionDecision": decision}
+
+    if reason:
+        result["permissionDecisionReason"] = reason
+        hook_specific_output["permissionDecisionReason"] = reason
+
+    result["hookSpecificOutput"] = hook_specific_output
+    return result
 
 
 def is_inside_assignments(path: str) -> bool:
@@ -78,32 +92,36 @@ def validate(payload: dict) -> dict:
         "createfile",
         "create_file",
         "edit",
+        "replace_string_in_file",
+        "insert_edit_into_file",
+        "delete_file",
+        "move_file",
+        "rename_file",
         "write",
         "applypatch",
         "apply_patch",
     }
-    # Se a ferramenta não é claramente de escrita e não trouxe um caminho alvo,
-    # não há nada a validar neste hook.
-    if normalized_tool_name not in write_tools and not file_path:
-        return {"permissionDecision": "allow"}
+    # Só valida chamadas de ferramentas claramente de escrita.
+    if normalized_tool_name not in write_tools:
+        return build_decision("allow")
 
     # Só valida arquivos dentro da pasta assignments/
     if not is_inside_assignments(file_path):
-        return {"permissionDecision": "allow"}
+        return build_decision("allow")
 
     filename = os.path.basename(file_path)
 
     if filename not in ALLOWED_FILENAMES:
-        return {
-            "permissionDecision": "deny",
-            "permissionDecisionReason": (
+        return build_decision(
+            "deny",
+            (
                 f"Arquivo bloqueado: '{filename}' não é um arquivo permitido "
                 f"em assignments/. "
                 f"Arquivos esperados: {', '.join(sorted(ALLOWED_FILENAMES))}."
             ),
-        }
+        )
 
-    return {"permissionDecision": "allow"}
+    return build_decision("allow")
 
 
 def main():
@@ -113,7 +131,7 @@ def main():
         result = validate(payload)
     except Exception:
         # Fail-open: erro interno do hook não deve bloquear execução da ferramenta.
-        result = {"permissionDecision": "allow"}
+        result = build_decision("allow")
 
     print(json.dumps(result))
 
