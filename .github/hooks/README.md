@@ -17,7 +17,7 @@ Hooks são scripts que o GitHub Copilot executa **automaticamente** em momentos 
 
 ## 🔍 O que o hook de exemplo faz?
 
-O hook **`validate-assignment-structure`** intercepta toda tentativa do Copilot de **criar um arquivo** (`create_file`) e verifica se ele está seguindo a estrutura correta do projeto.
+O hook **`validate-assignment-structure`** intercepta chamadas de ferramentas de **escrita de arquivos** (por exemplo: `create_file`, `apply_patch`, `edit`) e verifica se o caminho está seguindo a estrutura correta do projeto.
 
 **Regra validada:**
 > Qualquer arquivo criado dentro da pasta `assignments/` deve ser um dos seguintes:
@@ -40,6 +40,7 @@ A ativação é definida no arquivo JSON de configuração:
 
 ```json
 {
+  "version": 1,
   "hooks": {
     "PreToolUse": [
       {
@@ -88,15 +89,24 @@ Copilot lê o resultado e decide: prosseguir ou abortar
 **Respostas possíveis do script:**
 
 ```json
-{ "decision": "approve" }
-```
-```json
-{ "decision": "approve", "message": "✅ Estrutura válida!" }
+{ "permissionDecision": "allow" }
 ```
 ```json
 {
-  "decision": "block",
-  "message": "❌ Arquivo bloqueado: 'solucao.py' não é um arquivo permitido em assignments/."
+  "permissionDecision": "allow",
+  "hookSpecificOutput": {
+    "permissionDecision": "allow"
+  }
+}
+```
+```json
+{
+  "permissionDecision": "deny",
+  "permissionDecisionReason": "Arquivo bloqueado: 'solucao.py' não é um arquivo permitido em assignments/.",
+  "hookSpecificOutput": {
+    "permissionDecision": "deny",
+    "permissionDecisionReason": "Arquivo bloqueado: 'solucao.py' não é um arquivo permitido em assignments/."
+  }
 }
 ```
 
@@ -127,7 +137,7 @@ Copilot lê o resultado e decide: prosseguir ou abortar
 
 3. **Teste localmente** passando um payload de exemplo:
    ```bash
-   echo '{"toolInput": {"filePath": "assignments/teste/solucao.py"}}' \
+    echo '{"toolName":"create_file","toolInput":{"filePath":"assignments/teste/solucao.py"}}' \
      | python3 .github/hooks/validate-assignment-structure.py
    ```
 
