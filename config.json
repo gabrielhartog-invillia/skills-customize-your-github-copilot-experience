@@ -72,6 +72,20 @@
           "type": "python"
         }
       ]
+    },
+    {
+      "id": "graph-city-routes",
+      "title": "Graph Algorithms - City Routes",
+      "description": "Model and solve city routing problems with BFS and Dijkstra on weighted graphs.",
+      "path": "assignments/graph-city-routes",
+      "dueDate": "2026-08-04",
+      "attachments": [
+        {
+          "name": "Starter Code",
+          "file": "starter-code.py",
+          "type": "python"
+        }
+      ]
     }
   ]
 }
