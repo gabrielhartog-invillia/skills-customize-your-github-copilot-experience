@@ -1,19 +1,38 @@
 
-# 🎮 Desafio: Jogo da Forca
+# 📘 Atividade: Jogo da Forca
 
-Construa o clássico jogo de adivinhar palavras usando strings, loops e entrada de dados do usuário em Python.
+## 🎯 Objetivo
 
-## 🎯 O Que Você Vai Construir
+Construir, em Python, uma versão do jogo da Forca para praticar manipulação de strings, estruturas de repeticao, condicionais e controle de estado do jogo.
 
-Crie um jogo da Forca onde os jogadores adivinham letras para revelar uma palavra oculta antes de esgotar as tentativas.
+## 📝 Tarefas
 
-**Habilidades praticadas:** Manipulação de strings, loops, condicionais, seleção aleatória
+### 🛠️	Implementar a logica principal do jogo
 
-## ✅ Requisitos Obrigatórios
+#### Descrição
+Crie um programa que escolha uma palavra aleatoria de uma lista e permita ao jogador tentar adivinhar uma letra por vez ate descobrir toda a palavra ou perder todas as tentativas.
 
-Seu jogo deve:
-- Selecionar palavras aleatoriamente de uma lista predefinida
-- Aceitar palpites de letras e mostrar o progresso atual (formato _ _ _)
-- Rastrear tentativas incorretas restantes
-- Encerrar quando a palavra for adivinhada ou as tentativas esgotarem
-- Exibir mensagens de vitória/derrota
+#### Requisitos
+O programa concluído deve:
+
+- Definir uma lista com pelo menos 5 palavras e selecionar uma palavra aleatoriamente
+- Exibir o progresso da palavra com letras descobertas e caracteres "_" para letras ocultas
+- Solicitar um palpite de uma unica letra por rodada
+- Atualizar corretamente o estado do jogo quando a letra existir ou nao na palavra
+- Encerrar o jogo com mensagem de vitoria ao completar a palavra
+- Encerrar o jogo com mensagem de derrota ao atingir o limite de erros
+
+
+### 🛠️	Melhorar a experiencia do jogador
+
+#### Descrição
+Apos implementar a versao base, melhore a interacao com o usuario para tornar o jogo mais claro, justo e facil de acompanhar durante as rodadas.
+
+#### Requisitos
+O programa concluído deve:
+
+- Mostrar a quantidade de tentativas restantes a cada rodada
+- Impedir que o jogador repita letras ja informadas
+- Validar entradas invalidas (vazio, mais de uma letra, numeros ou simbolos)
+- Exibir ao final qual era a palavra secreta quando houver derrota
+- Manter mensagens claras de feedback para cada acerto e erro
