@@ -58,6 +58,20 @@
           "type": "csv"
         }
       ]
+    },
+    {
+      "id": "fastapi-rest-api",
+      "title": "Building REST APIs with FastAPI",
+      "description": "Build a fully functional REST API using Python's FastAPI framework, handling routes, parameters, and data validation with Pydantic.",
+      "path": "assignments/fastapi-rest-api",
+      "dueDate": "2026-08-04",
+      "attachments": [
+        {
+          "name": "Starter Code",
+          "file": "starter-code.py",
+          "type": "python"
+        }
+      ]
     }
   ]
 }
